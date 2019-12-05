@@ -1,8 +1,18 @@
+; docformat = 'rst'
+
 ;+
 ; Display a kcor FITS image & report cursor position.
 ;
-; :Params
-;   fits_image : in, required, type=string
+; :Examples:
+;   Try::
+;
+;     kcor_fvp, '19981101.1234.mk3.cpb.fts'
+;     kcor_fvp, '19981101.1234.mk3.rpb.fts', $
+;               cm='/home/stanger/color/bwy.lut'
+;     kcor_fvp, '19981101.1234.mk3.rpb.fts', /gif
+;
+; :Params:
+;   fits_name : in, required, type=string
 ;     filename of Spartan WLC FITS image
 ;
 ; :Keywords:
@@ -15,7 +25,7 @@
 ;
 ;     where index = 0, 1, 2, ... 255, and red/green/blue are in the range 0 to
 ;     255
-;   wmin : in, optional, type=float, default: 0.0
+;   wmin : in, optional, type=float, default=0.0
 ;     display minimum value
 ;   wmax : in, optional, type=float, default=1.2
 ;     display maximum value
@@ -23,14 +33,6 @@
 ;     display exponent
 ;   nolabel : in, optional, type=boolean
 ;     if set, do NOT display the position # label
-;
-; :Examples:
-;   Try::
-;
-;     kcor_fvp, '19981101.1234.mk3.cpb.fts'
-;     kcor_fvp, '19981101.1234.mk3.rpb.fts', $
-;               cm='/home/stanger/color/bwy.lut'
-;     kcor_fvp, '19981101.1234.mk3.rpb.fts', /gif
 ;
 ; :Uses:
 ;    readfits                  read FITS image
