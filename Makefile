@@ -1,4 +1,4 @@
-.PHONY: sswdeps help
+.PHONY: sswdeps help doc
 
 FLAGS=
 VERBOSE=0
@@ -28,6 +28,7 @@ FULL_SSW_DIR=/hao/contrib/ssw
 
 SSW_DEP_PATH="<IDL_DEFAULT>":$(KCOR_PATH):+$(FULL_SSW_DIR)
 
+
 sswdeps:
 	@echo "Find ROUTINES..."
 	$(ECHO_PREFIX)find src -name '*.pro' -exec basename {} .pro \; > ROUTINES
@@ -38,3 +39,6 @@ sswdeps:
 help:
 	@echo "Makefile targets:"
 	@echo "  sswdeps     find SSW IDL not in ssw/ directory"
+
+doc:
+	$(IDL) -e kcor_utils_doc

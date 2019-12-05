@@ -95,7 +95,7 @@ pro kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
   if (keyword_set(wmin)) then dmin = wmin   ; display min from keyword
   if (keyword_set(wmax)) then dmax = wmax   ; display max from keyword
   if (keyword_set(wexp)) then dexp = wexp   ; display exponent from keyword
-  
+
   tv, bytscl(img^dexp, min=dmin, max=dmax, top=249), xb, yb
 
   ; annotate image

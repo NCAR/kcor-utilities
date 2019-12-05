@@ -33,8 +33,8 @@
 ;   18 Nov 2015 [ALS] Modify for kcor
 ;-
 pro kcor_sunray, rmin, rmax, rinc, anginc, dotsize, $
-	         xcen, ycen, pixrs, scroll, cindex, $
-	         xmin, xmax, ymin, ymax
+                 xcen, ycen, pixrs, scroll, cindex, $
+                 xmin, xmax, ymin, ymax
   compile_opt strictarr
 
   nres = 1   ; low resolution only

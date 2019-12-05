@@ -4,11 +4,16 @@
 ; Annotate a FITS image.
 ;
 ; :Params:
-;		hdu: FITS header
-;		xdim: x-axis dimension
-;		ydim: y-axis dimension
-;		xb:   x-axis border for annotation
-;		yb:   y-axis border for annotation
+;   hdu : in
+;     FITS header
+;   xdim : in
+;     x-axis dimension
+;   ydim : in
+;     y-axis dimension
+;   xb : in
+;     x-axis border for annotation
+;   yb: in
+;     y-axis border for annotation
 ;
 ; :History:
 ;   Andrew L. Stanger   HAO/NCAR   14 September 2001
@@ -313,7 +318,7 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
 ;          /device, font=lfont, charsize=cs1, color=red
 ;  XYOUTS, xloc, ydat, pixval,			$
 ;          /device, charsize=1.5, color=grey
-; 	  /device, font=bfont, charsize=cs2, color=grey
+;          /device, font=bfont, charsize=cs2, color=grey
 
   ylab = ylab - y1 - y2 - y3
   ydat = ylab - y2
@@ -328,28 +333,28 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
 ;  ydat = ylab - y2
 ;  XYOUTS, xoff, ylab, 'FILTER',	$
 ;          /device, charsize=cs2, color=red
-;	  /device, font=lfont, charsize=cs1, color=red
+;          /device, font=lfont, charsize=cs1, color=red
 ;  XYOUTS, xoff, ydat, colorfil,	$
 ;          /device, charsize=cs3, color=grey
-;	  /device, font=bfont, charsize=cs2, color=grey
+;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
 ;  XYOUTS, xoff, ylab, 'POLAROID',	$
 ;          /device, charsize=cs2, color=red
-;	  /device, font=lfont, charsize=cs1, color=red
+;          /device, font=lfont, charsize=cs1, color=red
 ;  XYOUTS, xoff, ydat, polaroid,	$
 ;          /device, charsize=cs3, color=grey
-;	  /device, font=bfont, charsize=cs2, color=grey
+;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
 ;  XYOUTS, xoff, ylab, 'SECTOR',	$
 ;          /device, charsize=cs2, color=red
-;	  /device, font=lfont, charsize=cs1, color=red
+;          /device, font=lfont, charsize=cs1, color=red
 ;  XYOUTS, xoff, ydat, sector,	$
 ;          /device, charsize=cs3, color=grey
-;	  /device, font=bfont, charsize=cs2, color=grey
+;          /device, font=bfont, charsize=cs2, color=grey
 
   ylab = ylab - y1 - y2 - y3
   ydat = ylab - y2
@@ -362,65 +367,65 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'SPACECRAFT ROLL',	$
+;  xyouts, xoff, ylab, 'SPACECRAFT ROLL',	$
 ;          /device, charsize=cs2, color=red
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, sroll,	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, sroll,	$
 ;          /device, charsize=cs3, color=grey
-;	  /device, font=bfont, charsize=cs2, color=grey
+;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'TELESCOPE',	$
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, telescop,	$
-;	  /device, font=bfont, charsize=cs2, color=grey
+;  xyouts, xoff, ylab, 'TELESCOPE',	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, telescop,	$
+;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y2 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'INSTRUMENT',	$
+;  xyouts, xoff, ylab, 'INSTRUMENT',	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, instrume,	$
+;          /device, font=bfont, charsize=cs2, color=grey
+
+;  ylab = ylab - y1 - y2 - y3
+;  ydat = ylab - y2
+;  xyouts, xoff, ylab, 'OBJECT',	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, object,	$
+;          /device, font=bfont, charsize=cs2, color=grey
+
+;  ylab = ylab - y1 - y2 - y3
+;  ydat = ylab - y2
+;  xyouts, xoff, ylab, 'TYPE-OBS',	$
 ;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, instrume,	$
+;  xyouts, xoff, ydat, type_obs,	$
 ;	  /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'OBJECT',	$
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, object,	$
-;	  /device, font=bfont, charsize=cs2, color=grey
+;  xyouts, xoff, ylab, 'DATA FORM',	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, dataform,	$
+;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'TYPE-OBS',	$
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, type_obs,	$
-;	  /device, font=bfont, charsize=cs2, color=grey
-
-;  ylab = ylab - y1 - y2 - y3
-;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'DATA FORM',	$
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, dataform,	$
-;	  /device, font=bfont, charsize=cs2, color=grey
-
-;  ylab = ylab - y1 - y2 - y3
-;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'DATA MIN',	$
+;  xyouts, xoff, ylab, 'DATA MIN',	$
 ;          /device, charsize=1.0, color=red
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, sdatamin,	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, sdatamin,	$
 ;          /device, charsize=1.5, color=grey
-;	  /device, font=bfont, charsize=cs2, color=grey
+;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'DATA MAX',	$
+;  xyouts, xoff, ylab, 'DATA MAX',	$
 ;          /device, charsize=cs2, color=red
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, sdatamax,	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, sdatamax,	$
 ;          /device, charsize=cs3, color=grey
-;	  /device, font=bfont, charsize=cs2, color=grey
+;          /device, font=bfont, charsize=cs2, color=grey
 
   ylab = ylab - y1 - y2 - y3
   ydat = ylab - y2
@@ -450,35 +455,33 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
           ;/device, font=bfont, charsize=cs2, color=grey
 
 ;  print, 'wmin: ', wmin
-;  IF (KEYWORD_SET (wmin) OR wmin EQ 0.0) THEN	$
-;  IF (KEYWORD_SET (wmin)) THEN	$
-;  BEGIN
-;     wmin = STRTRIM (STRING (wmin, FORMAT='(E8.2)'), 2)
-;	ylab = ylab - y1 - y2 - y3
+;  if (keyword_set(wmin) or wmin eq 0.0) then	$
+;  if (keyword_set(wmin)) then begin
+;     wmin = strtrim(string(wmin, format='(E8.2)'), 2)
+;     ylab = ylab - y1 - y2 - y3
 ;     ydat = ylab - y2
-;     XYOUTS, xoff, ylab, 'WMIN',	$
-;		/device, font=lfont, charsize=cs1, color=red
-;     XYOUTS, xoff, ydat, wmin,	$
-;		/device, font=bfont, charsize=cs2, color=grey
-;  END
+;     xyouts, xoff, ylab, 'WMIN',	$
+;             /device, font=lfont, charsize=cs1, color=red
+;     xyouts, xoff, ydat, wmin,	$
+;             /device, font=bfont, charsize=cs2, color=grey
+;  end
 
-;  IF (KEYWORD_SET (wmax)) THEN	$
-;  BEGIN
-;     wmax = STRTRIM (STRING (wmax, FORMAT='(E8.2)'), 2)
-;	ylab = ylab - y1 - y2 - y3
+;  if (keyword_set(wmax)) then begin
+;     wmax = strtrim (string (wmax, format='(e8.2)'), 2)
+;     ylab = ylab - y1 - y2 - y3
 ;     ydat = ylab - y2
-;     XYOUTS, xoff, ylab, 'WMAX',	$
-;		/device, font=lfont, charsize=cs1, color=red
-;     XYOUTS, xoff, ydat, wmax,	$
-;		/device, font=bfont, charsize=cs2, color=grey
-;  END
+;     xyouts, xoff, ylab, 'wmax',	$
+;             /device, font=lfont, charsize=cs1, color=red
+;     xyouts, xoff, ydat, wmax,	$
+;             /device, font=bfont, charsize=cs2, color=grey
+;  end
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'BRIGHTNESS UNIT',	$
-;	  /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, bunit,		$
-;	  /device, font=bfont, charsize=cs2, color=grey
+;  xyouts, xoff, ylab, 'brightness unit',	$
+;          /device, font=lfont, charsize=cs1, color=red
+;  xyouts, xoff, ydat, bunit,		$
+;          /device, font=bfont, charsize=cs2, color=grey
 
   ; draw sun circle
   g_mincol = xb
@@ -492,8 +495,8 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
   anginc =  10.0
 
   sun_circle, radius, angmin, angmax, anginc, yellow,  		$
-	      xcen, ycen, pixrs, roll,				$
-	      g_mincol, g_maxcol, g_minrow, g_maxrow
+              xcen, ycen, pixrs, roll,				$
+              g_mincol, g_maxcol, g_minrow, g_maxrow
 
   radius = 1.6
 
@@ -511,8 +514,8 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
   dotsize =  3
 
   kcor_sunray, rmin, rmax, rinc, anginc, dotsize,	$
-	       xcen, ycen, pixrs, roll, red,    	$
-	       g_mincol, g_maxcol, g_minrow, g_maxrow
+               xcen, ycen, pixrs, roll, red,    	$
+               g_mincol, g_maxcol, g_minrow, g_maxrow
 
   ; draw north pointer
   cirrad = 1.0

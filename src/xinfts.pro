@@ -3,7 +3,7 @@
 ;+
 ; Animate a sequence of FITS images.
 ;
-; :Example:
+; :Examples:
 ;   For example::
 ;
 ;     xinfts, 'fits.ls'
@@ -34,28 +34,27 @@
 ;     window maximum intensity scaling value (overrides 'DISPMAX').
 ;
 ; :History:
-;	 7 Aug 1995: procedure created by Andrew L. Stanger, HAO/NCAR
-;	11 Aug 1995: added order keyword, ALS, HAO/NCAR
-;	11 Mar 1996: reduce image size if image is larger than 1000x1000.
-;	14 Apr 1998: replaced "readfits" with "fxread", since "readfits"
-;		     did not always apply 'BSCALE/BZERO' to MK3 FITS images.
-;	14 Oct 1999: Fix label position: ypos = nypix - 20 --> ypos = ydim - 20 
-;		     Move label to bottom of window.
-;		     Increase label size for SunOS.
-;	 7 Apr 2000: Rotate image if CROTA1 is not zero.
-;		     Also rotate PICS image if CROTA1 missing
-;		     but SOLAR_P0 is present in FITS header.
-;	20 Apr 2000: Do NOT rotate image IF 'DATAFORM'='POLAR'.
-;	20 Apr 2000: Use either 'CRROTA1' and 'CROTA1' in PICS images.
-;		     Note: CRROTA1 (incorrect spelling) was used for some
-;		     cropped & rotated PICS images.
-;	15 Nov 2000: Add min & max keywords so that user may set scaling.
-;	25 Jan 2001: Rotate ONLY if crpix1 & crpix2 are non-negative.
-;	 4 Sep 2001: Add /NAN keyword to BYTSCL call.
-;	 5 Sep 2001: Add default directory for color table (/home/cordyn/color).
+;   07 Aug 1995: procedure created by Andrew L. Stanger, HAO/NCAR
+;   11 Aug 1995: added order keyword, ALS, HAO/NCAR
+;   11 Mar 1996: reduce image size if image is larger than 1000x1000.
+;   14 Apr 1998: replaced "readfits" with "fxread", since "readfits"
+;      did not always apply 'BSCALE/BZERO' to MK3 FITS images.
+;   14 Oct 1999: Fix label position: ypos = nypix - 20 --> ypos = ydim - 20 
+;      Move label to bottom of window.
+;      Increase label size for SunOS.
+;   07 Apr 2000: Rotate image if CROTA1 is not zero.
+;      Also rotate PICS image if CROTA1 missing
+;      but SOLAR_P0 is present in FITS header.
+;   20 Apr 2000: Do NOT rotate image IF 'DATAFORM'='POLAR'.
+;   20 Apr 2000: Use either 'CRROTA1' and 'CROTA1' in PICS images.
+;      Note: CRROTA1 (incorrect spelling) was used for some
+;      cropped & rotated PICS images.
+;   15 Nov 2000: Add min & max keywords so that user may set scaling.
+;   25 Jan 2001: Rotate ONLY if crpix1 & crpix2 are non-negative.
+;   04 Sep 2001: Add /NAN keyword to BYTSCL call.
+;   05 Sep 2001: Add default directory for color table (/home/cordyn/color).
 ;-
-
-PRO xinfts, listfile, $
+pro xinfts, listfile, $
             rate=rate, $
             label=label, $
             cm=cm, $
@@ -148,13 +147,13 @@ PRO xinfts, listfile, $
   init = 'y'    ; --- init can be set to 'n'  once everything
   ; --- has been initialized,  
   ; --- i.e. once this routine has been run once... 
- 
+
   if (init eq 'y') then begin
     xinteranimate, set=[xdim + 4, ydim + 4, n_images], /showload
- 
+
     CLOSE, 10
     OPENR, 10, listfile
- 
+
     ; image loop
     for f = 0L, n_images - 1L do begin
       ; read image into array & scale intensity levels to range: 0-255.

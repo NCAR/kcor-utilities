@@ -82,7 +82,7 @@ pro kcor_fvp, fits_name, $
     loadct, 0, ncolors=249, /silent
     tvlct, 255B, 0B, 0B, 254B
   endelse
- 
+
   ; read color map arrays
   redlut   = bytarr(256)
   greenlut = bytarr(256)

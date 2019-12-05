@@ -7,7 +7,7 @@
 ; If the coordinates fall outside the displayable screen area, the coordinates
 ; are clipped to the screen boundary.
 ;
-; :Params: 
+; :Params:
 ;   xcen, ycen : in, required, type=float
 ;     sun center coordinates
 ;   pixrs : in, required, type=float
@@ -38,9 +38,9 @@
 ;    4 Apr 1991: SGI/GL version.
 ;   30 Dec 2005: IDL version
 ;   17 Nov 2015 [ALS] Adapt for kcor.
-;- 
+;-
 pro kcor_north, xcen, ycen, pixrs, scroll, cirrad, tiprad, cindex, $
-	        g_mincol, g_maxcol, g_minrow, g_maxrow
+                g_mincol, g_maxcol, g_minrow, g_maxrow
   compile_opt strictarr
 
   cproll =  0   ; C/P North is 43 deg CCW from +Y axis
