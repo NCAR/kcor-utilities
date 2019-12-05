@@ -19,6 +19,9 @@
 ;   Andrew L. Stanger   HAO/NCAR   14 September 2001
 ;   28 Dec 2005: update for SMM C/P.
 ;   12 Nov 2015: Adapt for kcor.
+;
+; :Uses:
+;   kcor_sunray
 ;-
 pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
                         wmin=wmin, wmax=wmax, wexp=wexp
