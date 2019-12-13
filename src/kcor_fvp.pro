@@ -138,7 +138,7 @@ pro kcor_fvp, fits_name, $
   ydim_prev = ydim
 
   ; annotate image
-;   kcor_fits_annotate, hdu, xdim, ydim, xb, yb
+  ;kcor_fits_annotate, hdu, xdim, ydim, xb, yb
 
   ; display image
   kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
