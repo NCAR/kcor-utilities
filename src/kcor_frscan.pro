@@ -6,28 +6,29 @@
 ; Note: this procedure works best in private colormap mode (256 levels).
 ;
 ; :Params:
-;   fits_file : in
-;     name of FITS file
-;   angle : in
+;   fits_file : in, required, type=string
+;     FITS filename
+;   angle : in, required, type=numeric
 ;     position angle [degrees CCW from solar North]
-;   radmin : in
+;   radmin : in, required, type=numeric
 ;     beginning radius [Rsun]
-;   radmax : in
+;   radmax : in, required, type=numeric
 ;     ending radius [Rsun]
-;   radinc : in
+;   radinc : in, required, type=numeric
 ;     angle increment [Rsun]
 ;
 ; :Keywords:
-;   ymin : in, optional
+;   ymin : in, optional, type=numeric
 ;     Y-axis minimum value
-;   ymax : in, optional
+;   ymax : in, optional, type=numeric
 ;     Y-axis maximum value
 ;   text : in, optional, type=boolean
-;     write scan data to a text file
+;     write scan data to the text file "{basename}_pa{angle}.txt"
 ;   ps : in, optional, type=boolean
 ;     option to write plot to a postscript file
 ;
 ; :Uses:
+;   readfits, fxpar
 ;   rscan.pro    performs radial scan
 ;   lct.pro      loads a color table from an ASCII file
 ;   rcoord.pro   converts between [r,th] and [x,y] coordinates
@@ -251,8 +252,8 @@ pro kcor_frscan, fits_file, angle, radmin, radmax, radinc, $
 
   yminset = 0
   ymaxset = 0
-  if (keyword_set(ymin)) then yminset = 1  else ymin = min (scan)
-  if (keyword_set(ymax)) then ymaxset = 1  else ymax = max (scan)
+  if (n_elements(ymin) gt 0L) then yminset = 1 else ymin = min(scan)
+  if (n_elements(ymax) gt 0L) then ymaxset = 1 else ymax = max(scan)
 
   print, 'yminset, ymaxset: ', yminset, ymaxset
   print, 'ymin/ymax: ', ymin, ymax

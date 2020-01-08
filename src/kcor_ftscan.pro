@@ -6,26 +6,27 @@
 ; Note: this procedure works best in private colormap mode (256 levels).
 ;
 ; :Params:
-;   fits_file : in, required
-;     name of FITS file
-;   radius : in, required
+;   fits_file : in, required, type=string
+;     FITS filename
+;   radius : in, required, type=numeric
 ;     radius value [Rsun units]
-;   thmin : in, required
+;   thmin : in, required, type=numeric
 ;     beginning angle [degrees]
-;   thmax : in, required
+;   thmax : in, required, type=numeric
 ;     ending angle [degrees]
-;   thinc : in, required
+;   thinc : in, required, type=numeric
 ;     angle increment [degrees]
 ;
 ; :Keywords:
-;   ymin : in, optional
+;   ymin : in, optional, type=numeric, default=0.0
 ;     Y-axis minimum value
-;   ymax : in, optional
+;   ymax : in, optional, type=numeric, default=60000.0
 ;     Y-axis maximum value
-;   text : in, optional
-;     write scan values to a text file
+;   text : in, optional, type=boolean
+;     write scan values to a text file "{basename}_r{radius}_plot.txt"
 ;
 ; :Uses:
+;   readfits, fxpar
 ;   tscan.pro    performs azimuthal (theta) scan
 ;   lct.pro      loads a color table from an ASCII file
 ;   rcoord.pro   converts between [r,th] and [x,y] coordinates
@@ -268,17 +269,13 @@ pro kcor_ftscan, fits_file, radius, thmin, thmax, thinc, $
   yminset = 0
   ymaxset = 0
 
-  if (keyword_set(ymin)) then begin
-    ymin = ymin
-  endif else begin
-    ymin = 0
-  endelse
+  if (n_elements(ymin) eq 0L) then begin
+    ymin = 0.0
+  endif
 
-  if (keyword_set(ymax)) then begin
-    ymax = ymax
-  endif else begin
-    ymax = 60000.0 
-  endelse
+  if (n_elements(ymax) eq 0L) then begin
+    ymax = 60000.0
+  endif
 
   print, 'ymin/ymax: ', ymin, ymax
   print, 'yrange: ', ymin, ymax

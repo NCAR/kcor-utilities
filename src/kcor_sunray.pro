@@ -4,26 +4,37 @@
 ; Draw radial rays.
 ;
 ; :Params:
-;   rmin, rmax : in
-;     start/stop radii [Rsun]
-;   rinc : in
+;   rmin : in, required, type=numeric
+;     minimum radii [Rsun]
+;   rmax : in, required, type=numeric
+;     maximum radii [Rsun]
+;   rinc : in, required, type=numeric
 ;     increment for radius [Rsun]
-;   anginc : in
-;     angular increment [degrees].
-;   dotsize : in
+;   anginc : in, required, type=numeric
+;     angular increment [degrees]
+;   dotsize : in, required, type=integer
 ;     dot size [1, 3, 5, 7, ...] [pixels]
-;   xcen, ycen : in
-;     sun center [pixels]
-;   pixrs : in
+;   xcen : in, required, type=numeric
+;     x-coordinate of sun center [pixels]
+;   ycen : in, required, type=numeric
+;     y-coordinate of sun center [pixels]
+;   pixrs : in, required, type=float
 ;     # pixels/Rsun
-;   scroll : in
+;   scroll : in, required, type=float
 ;     spacecraft roll [degrees]
-;   cindex : in
+;   cindex : in, required, type=integer
 ;     color index [0-255]
-;   xmin, ymin : in
-;     lower left  corner of window
-;   xmax, ymax : in
-;     upper right corner of window
+;   xmin : in, required, type=numeric
+;     x-coordinate of lower left  corner of window
+;   ymin : in, required, type=numeric
+;     y-coordinate of lower left  corner of window
+;   xmax : in, required, type=numeric
+;     x-coordinate of upper right corner of window
+;   ymax : in, required, type=numeric
+;     y-coordinate of upper right corner of window
+;
+; :Uses:
+;   rcoord, wvec
 ;
 ; :Author:
 ;   Andrew L. Stanger   HAO/NCAR   10 Jan 2006

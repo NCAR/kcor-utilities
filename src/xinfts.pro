@@ -17,7 +17,8 @@
 ;
 ; :Params:
 ;   listfile : in, required, type=string
-;     filename of file containing the names of the FITS files to be animated
+;     filename of text file containing the names of the FITS files to be
+;     animated
 ;
 ; :Keywords:
 ;   rate : in, optional, type=numerical, default=100
@@ -32,6 +33,9 @@
 ;     window minimum intensity scaling value (overrides 'DISPMIN').
 ;   wmax : in, optional, type=float, default=DISPMIN value
 ;     window maximum intensity scaling value (overrides 'DISPMAX').
+;
+; :Uses:
+;   fxread, fxpar
 ;
 ; :History:
 ;   07 Aug 1995: procedure created by Andrew L. Stanger, HAO/NCAR
@@ -151,9 +155,6 @@ pro xinfts, listfile, $
   if (init eq 'y') then begin
     xinteranimate, set=[xdim + 4, ydim + 4, n_images], /showload
 
-    CLOSE, 10
-    OPENR, 10, listfile
-
     ; image loop
     for f = 0L, n_images - 1L do begin
       ; read image into array & scale intensity levels to range: 0-255.
@@ -183,8 +184,8 @@ pro xinfts, listfile, $
         dform = 'NONE'
       endelse
 
-      if (keyword_set(wmin)) then winmin = wmin else winmin = dispmin
-      if (keyword_set(wmax)) then winmax = wmax else winmax = dispmax
+      if (n_elements(wmin) gt 0L) then winmin = wmin else winmin = dispmin
+      if (n_elements(wmax) gt 0L) then winmax = wmax else winmax = dispmax
 
       print, 'winmin/winmax: ', winmin, winmax
       dimfac = 1.0

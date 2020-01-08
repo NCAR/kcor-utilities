@@ -4,16 +4,24 @@
 ; Annotate a FITS image.
 ;
 ; :Params:
-;   hdu : in
+;   hdu : in, required, type=strarr
 ;     FITS header
-;   xdim : in
+;   xdim : in, required, type=numeric
 ;     x-axis dimension
-;   ydim : in
+;   ydim : in, required, type=numeric
 ;     y-axis dimension
-;   xb : in
+;   xb : in, required, type=numeric
 ;     x-axis border for annotation
-;   yb: in
+;   yb: in, required, type=numeric
 ;     y-axis border for annotation
+;
+; :Keywords:
+;   wmin : in, optional, type=numeric, default=0.0
+;     minimum used for display scaling
+;   wmax : in, optional, type=numeric, default=1.2
+;     maximum used for display scaling
+;   wexp : in, optional, type=numeric, default=0.7
+;     exponent used for display scaling
 ;
 ; :History:
 ;   Andrew L. Stanger   HAO/NCAR   14 September 2001
@@ -21,7 +29,7 @@
 ;   12 Nov 2015: Adapt for kcor.
 ;
 ; :Uses:
-;   kcor_sunray
+;   fxpar, wvec, sun_circle, kcor_north, kcor_sunray
 ;-
 pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
                         wmin=wmin, wmax=wmax, wexp=wexp
@@ -59,10 +67,7 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
   if (tfont eq '') then tfont = 'fixed'
   tfont = -1
 
-  ;-----------------
-  ; Character sizes:
-  ;-----------------
-
+  ; character sizes
   xoff =  2
   yoff =  2
 
@@ -123,8 +128,8 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
   datatype  = fxpar(hdu, 'DATATYPE', count=qdatatype)
   ;type_obs  = fxpar(hdu, 'TYPE-OBS')
   origin    = fxpar(hdu, 'ORIGIN')
-  telescop  = strtrim(fxpar (hdu, 'TELESCOP'), 2)
-  instrume  = strtrim(fxpar (hdu, 'INSTRUME'), 2)
+  telescop  = strtrim(fxpar(hdu, 'TELESCOP'), 2)
+  instrume  = strtrim(fxpar(hdu, 'INSTRUME'), 2)
   date_obs  = fxpar(hdu, 'DATE-OBS', count=qdate_obs)
   time_obs  = fxpar(hdu, 'TIME-OBS', count=qtime_obs)
 
@@ -167,11 +172,10 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
   pixrs    = rsun / cdelt1
   srsun    = string(rsun, format='(F7.2)')
 
-  ;if (datamin EQ 0.0 and datamax EQ 0.0) then $
-  ;begin
-  ;  datamin = MIN (img)
-  ;  datamax = MAX (img)
-  ;end
+  ;if (datamin eq 0.0 and datamax eq 0.0) then begin
+  ;  datamin = min(img)
+  ;  datamax = max(img)
+  ;endif
 
   print, 'xcen, ycen: ', xcen, ycen
   print, 'rsun, cdelt1, pixrs : ', rsun, cdelt1, pixrs
@@ -197,9 +201,9 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
   if (qdispmax ne 0) then dmax = dispmax
   if (qdispexp ne 0) then dexp = dispexp
 
-  if (keyword_set(wmin)) then dmin = wmin
-  if (keyword_set(wmax)) then dmax = wmax
-  if (keyword_set(wexp)) then dexp = wexp
+  if (n_elements(wmin) gt 0L) then dmin = wmin
+  if (n_elements(wmax) gt 0L) then dmax = wmax
+  if (n_elements(wexp) gt 0L) then dexp = wexp
 
   print, 'dmin/dmax/dexp: ', dmin, dmax, dexp
 
@@ -302,24 +306,24 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
 
   if (object eq 'CORONA') then pixval = 'K-CORONA' else pixval = 'CALIBRATION'
 
-  ;  IF (lfc  EQ 0) THEN pixval = '(K+F)'         
-  ;  IF (lstr EQ 0) THEN pixval = 'S+'    + pixval
-  ;  IF (lvig EQ 0) THEN pixval =           pixval + '*V'
-  ;  IF (lcc  EQ 0) THEN pixval = '[' +     pixval + ']/C'
+  ;  if (lfc  eq 0) then pixval = '(K+F)'         
+  ;  if (lstr eq 0) then pixval = 'S+'    + pixval
+  ;  if (lvig eq 0) then pixval =           pixval + '*V'
+  ;  if (lcc  eq 0) then pixval = '[' +     pixval + ']/C'
 
   pixval = strtrim(pixval, 2)
   print, 'pixval: ', pixval
   lenpixval = strlen(pixval)
   xloc = (xb - (lenpixval * x2)) / 2
   xloc = xoff
-  if (xloc < 0) then xloc = xoff
+  if (xloc lt 0) then xloc = xoff
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xloc, ylab,'INTENSITY SOURCE',	$
+;  xyouts, xloc, ylab, 'INTENSITY SOURCE',	$
 ;          /device, charsize=1.0, color=red
 ;          /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xloc, ydat, pixval,			$
+;  xyouts, xloc, ydat, pixval,			$
 ;          /device, charsize=1.5, color=grey
 ;          /device, font=bfont, charsize=cs2, color=grey
 
@@ -334,28 +338,28 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'FILTER',	$
+;  xyouts, xoff, ylab, 'FILTER',	$
 ;          /device, charsize=cs2, color=red
 ;          /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, colorfil,	$
+;  xyouts, xoff, ydat, colorfil,	$
 ;          /device, charsize=cs3, color=grey
 ;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'POLAROID',	$
+;  xyouts, xoff, ylab, 'POLAROID',	$
 ;          /device, charsize=cs2, color=red
 ;          /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, polaroid,	$
+;  xyouts, xoff, ydat, polaroid,	$
 ;          /device, charsize=cs3, color=grey
 ;          /device, font=bfont, charsize=cs2, color=grey
 
 ;  ylab = ylab - y1 - y2 - y3
 ;  ydat = ylab - y2
-;  XYOUTS, xoff, ylab, 'SECTOR',	$
+;  xyouts, xoff, ylab, 'SECTOR',	$
 ;          /device, charsize=cs2, color=red
 ;          /device, font=lfont, charsize=cs1, color=red
-;  XYOUTS, xoff, ydat, sector,	$
+;  xyouts, xoff, ydat, sector,	$
 ;          /device, charsize=cs3, color=grey
 ;          /device, font=bfont, charsize=cs2, color=grey
 
@@ -503,7 +507,7 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
 
   radius = 1.6
 
-  ; draw radial lines.
+  ; draw radial lines
   rmin    =  1.2
   rmax    =  1.7
   rinc    =  0.2
@@ -538,7 +542,7 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
     xloc = fix(xcenwin + pixrs * i + 0.5)
   endwhile
 
-  xloc = FIX (xcenwin + 0.5)
+  xloc = fix(xcenwin + 0.5)
   i = 0
   while (xloc ge xb and xloc le xdim+xb-1) do begin
     wvec, xloc, yb, xloc, yb-6, grey
@@ -549,7 +553,7 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
   wvec, ixcen+xb-3, yb-3, ixcen+xb+3, yb-3, grey
 
   ycenwin = ycen + yb
-  yloc = FIX (ycenwin + 0.5)
+  yloc = fix(ycenwin + 0.5)
   i = 0
   while (yloc ge yb and yloc le ydim+yb-1) do begin
     wvec, xb-6, yloc, xb, yloc, grey
@@ -557,7 +561,7 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
     yloc = fix(ycenwin + pixrs * i + 0.5)
   endwhile
 
-  yloc = FIX (ycenwin + 0.5)
+  yloc = fix(ycenwin + 0.5)
   i = 0
   while (yloc ge yb and yloc le ydim+yb-1) do begin
     wvec, xb-6, yloc, xb, yloc, grey
@@ -630,12 +634,12 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
 
   ; draw title
   title = telescop
-  lentit = STRLEN (title)
+  lentit = strlen(title)
   print, 'lentit: ', lentit
   print, 'x4: ', x4
   print, 'lentit * x4 : ', lentit * x4
   xloc = xb + (xdim - (lentit * x4)) / 2
-  ylab = yc2 + (yb - yc2 - y4) / 2 + FIX (y4 * 0.2) - 3
+  ylab = yc2 + (yb - yc2 - y4) / 2 + fix(y4 * 0.2) - 3
   ylab = yc2 + 10
   print, 'xloc: ', xloc
   print, 'yb, y4, ylab: ', yb, y4, ylab

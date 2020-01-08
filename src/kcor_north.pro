@@ -8,8 +8,10 @@
 ; are clipped to the screen boundary.
 ;
 ; :Params:
-;   xcen, ycen : in, required, type=float
-;     sun center coordinates
+;   xcen : in, required, type=float
+;     sun center x-coordinate
+;   ycen : in, required, type=float
+;     sun center y-coordinate
 ;   pixrs : in, required, type=float
 ;     # pixels/Rsun
 ;   scroll : in, required, type=float
@@ -20,12 +22,17 @@
 ;     tip radius    [Rsun]
 ;   cindex : in, required, type=integer
 ;     color LUT index [0-255]
-;   g_mincol, g_maxcol : in, required, type=integer
-;     min and max horizontal pixels
-;   g_minrow, g_maxrow : in, required, type=integer
-;     min and max vertical pixels.
+;   g_mincol : in, required, type=integer
+;     min horizontal pixels
+;   g_maxcol : in, required, type=integer
+;     max horizontal pixels
+;   g_minrow : in, required, type=integer
+;     min vertical pixels
+;   g_maxrow : in, required, type=integer
+;     max vertical pixels
 ;
 ; :Uses:
+;   rcoord
 ;   wvec.pro    draw a vector on the display screen.
 ;
 ; :Author:

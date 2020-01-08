@@ -26,18 +26,19 @@
 ;     where index = 0, 1, 2, ... 255, and red/green/blue are in the range 0 to
 ;     255
 ;   wmin : in, optional, type=float, default=0.0
-;     display minimum value
+;     minimum value used for display scaling
 ;   wmax : in, optional, type=float, default=1.2
-;     display maximum value
+;     maximum value used for display scaling
 ;   wexp : in, optional, type=float, default=0.7
-;     display exponent
+;     exponent used for display scaling
+;   text : in, optional, type=boolean
+;     write scan data to a text file "{file_basename(fits_name)}.pos"
 ;   nolabel : in, optional, type=boolean
 ;     if set, do NOT display the position # label
 ;
 ; :Uses:
-;    readfits                  read FITS image
-;    headfits                  read FITS header
-;    fxpar                     read FITS keyword parameter
+;    headfits                   read FITS header
+;    fxpar                      read FITS keyword parameter
 ;
 ;    kcor_fitsdisp.pro          display kcor image
 ;    kcor_fits_annotate.pro     annotate kcor image
@@ -110,7 +111,7 @@ pro kcor_fvp, fits_name, $
     free_lun, lun
   endif
 
-  ; read FITS image & header
+  ; read FITS header
   hdu = headfits(fits_name)
 
   ; extract information from header

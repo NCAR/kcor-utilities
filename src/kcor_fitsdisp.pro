@@ -7,36 +7,40 @@
 ;   Try::
 ;
 ;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb
-;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, /gif
+;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb
 ;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, wmin=1.0
 ;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, wmax=250.0
 ;
 ; :Params:
 ;   fits_name : in, required, type=string
 ;     FITS filename
-;   xdim_prev : out, required
-;   ydim_prev : out, required
+;   xdim_prev : out, required, type=numeric
+;     `xdim` for image
+;   ydim_prev : out, required, type=numeric
+;     `ydim` for image
 ;   xb : in, required, type=numeric
 ;     x-axis border for annotation
 ;   yb : in, required, type=numeric
 ;     y-axis border for annotation
 ;
 ; :Keywords:
-;   gif
-;   wmin
-;   wmax
-;   wexp
+;   wmin : in, optional, type=numeric, default=0.0
+;     minimum used for display scaling
+;   wmax : in, optional, type=numeric, default=1.2
+;     maximum used for display scaling
+;   wexp : in, optional, type=numeric, default=0.7
+;     exponent used for display scaling
 ;
 ; :Uses:
-;   kcor_fits_annotate
+;   fxpar, readfits, kcor_fits_annotate
 ;
 ; :History:
 ;   Andrew L. Stanger   HAO/NCAR   14 September 2001
 ;   26 Sep 2001 [ALS] wide format (no colorbar BELOW image).
-;   17 Nov 2015 [ALS] adapt for kcor
+;   17 Nov 2015 [ALS] adapt for KCor
 ;-
 pro kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
-                   gif=gif, wmin=wmin, wmax=wmax, wexp=wexp
+                   wmin=wmin, wmax=wmax, wexp=wexp
   compile_opt strictarr
 
   print, '>>> kcor_fitsdisp'
@@ -104,13 +108,13 @@ pro kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
   dexp = 0.7
 
   ; display image
-  if (qdispmin ne 0) then dmin = dispmin    ; display min from header
-  if (qdispmax ne 0) then dmax = dispmax    ; display max from header
-  if (qdispexp ne 0) then dexp = dispexp    ; display exponent from header
+  if (qdispmin gt 0) then dmin = dispmin    ; display min from header
+  if (qdispmax gt 0) then dmax = dispmax    ; display max from header
+  if (qdispexp gt 0) then dexp = dispexp    ; display exponent from header
 
-  if (keyword_set(wmin)) then dmin = wmin   ; display min from keyword
-  if (keyword_set(wmax)) then dmax = wmax   ; display max from keyword
-  if (keyword_set(wexp)) then dexp = wexp   ; display exponent from keyword
+  if (n_elements(wmin) gt 0L) then dmin = wmin   ; display min from keyword
+  if (n_elements(wmax) gt 0L) then dmax = wmax   ; display max from keyword
+  if (n_elements(wexp) gt 0L) then dexp = wexp   ; display exponent from keyword
 
   tv, bytscl(img^dexp, min=dmin, max=dmax, top=249), xb, yb
 
