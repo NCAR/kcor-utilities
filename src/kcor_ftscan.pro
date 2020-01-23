@@ -10,9 +10,12 @@
 ;
 ;     IDL> kcor_ftscan, f, 1.3, 0.0, 180.0, 0.5
 ;
-;   This should produce::
+;   This should produce the following plot of the pB values through the
+;   azimuthal scan of the image::
 ;
 ;   .. image:: 20200120_214522_kcor_l2_r1.30_plot.gif
+;
+;   And the following image showing the locations of the scan:
 ;
 ;   .. image:: 20200120_214522_kcor_l2_r1.30_img.gif
 ;
@@ -35,6 +38,8 @@
 ;     Y-axis maximum value
 ;   text : in, optional, type=boolean
 ;     write scan values to a text file "{basename}_r{radius}_plot.txt"
+;   ps : in, optional, type=boolean
+;     option to write plot to a postscript file
 ;
 ; :Uses:
 ;   readfits, fxpar
@@ -51,7 +56,7 @@
 ;   04 Dec 2017 JB: set default ymin and ymax values
 ;-
 pro kcor_ftscan, fits_file, radius, thmin, thmax, thinc, $
-                 ymin=ymin, ymax=ymax, text=text
+                 ymin=ymin, ymax=ymax, text=text, ps=ps
   compile_opt strictarr
 
   ; default variable values
@@ -296,18 +301,20 @@ pro kcor_ftscan, fits_file, radius, thmin, thmax, thinc, $
   device, /close
 
   ; plot theta scan to a postscript file
-  ps_file  = basename + '_r' + srad + '_plot.ps'
-  print, 'ps_file: ', ps_file
-  set_plot, 'PS'
-  device, filename=ps_file
+  if (keyword_set(ps)) then begin
+    ps_file  = basename + '_r' + srad + '_plot.ps'
+    print, 'ps_file: ', ps_file
+    set_plot, 'PS'
+    device, filename=ps_file
 
-  plot, scandx, scan, $
-        title='Theta Scan ' + fits_file + ' ' + srad + ' Rsun',	$
-        xtitle='Position Angle', xstyle=1, $
-        ytitle=ylab, $
-        yrange=[_ymin, _ymax]
+    plot, scandx, scan, $
+          title='Theta Scan ' + fits_file + ' ' + srad + ' Rsun',	$
+          xtitle='Position Angle', xstyle=1, $
+          ytitle=ylab, $
+          yrange=[_ymin, _ymax]
 
-  device, /close
+    device, /close
+  endif
 
   set_plot, 'X'
 end

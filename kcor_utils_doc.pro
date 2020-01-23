@@ -5,7 +5,9 @@ pro kcor_utils_doc
 
   root = mg_src_root()
   idldoc, root=filepath('src', root=root), $
-          output=filepath('api-userdocs', root=root), $
+          output=filepath('api-userdocs', $
+                          subdir=['..', 'kcor-utilities.wiki'], $
+                          root=root), $
           /user, $
           title='KCor utilities', $
           subtitle='API documentation'

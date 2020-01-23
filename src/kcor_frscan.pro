@@ -11,11 +11,14 @@
 ;
 ;     IDL> kcor_frscan, f, 75.0, 1.11, 2.6, 0.01
 ;
-;   This should produce the following two plots:
-;
-;     .. image:: 20200120_214522_kcor_l2_pa75.00_img.gif
+;   This should produce the following plot of the pB values through the radial
+;   scan of the image:
 ;
 ;     .. image:: 20200120_214522_kcor_l2_pa75.00_plot.gif
+;
+;   And the following image showing the locations of the scan:
+;
+;     .. image:: 20200120_214522_kcor_l2_pa75.00_img.gif
 ;
 ; :Params:
 ;   fits_file : in, required, type=string
@@ -302,30 +305,29 @@ pro kcor_frscan, fits_file, angle, radmin, radmax, radinc, $
 
   ; plot radial scan to a postscript file
   if (keyword_set(ps)) then begin
-   ps_file  = strmid(fits_file, 0, extpos) + '_pa' + sangle + '_plot.ps'
-   print, 'ps_file: ', ps_file
-   set_plot, 'PS'
-   device, filename=ps_file
+    ps_file  = strmid(fits_file, 0, extpos) + '_pa' + sangle + '_plot.ps'
+    print, 'ps_file: ', ps_file
+    set_plot, 'PS'
+    device, filename=ps_file
 
-   if (yminset or ymaxset) then	begin
-     plot, scandx, scan * 1.0e-06, $
-           charsize=1.5, thick=2, charthick=2, xthick=2, ythick=2, $
-           title=fits_file + ' Radial Scan @' + sangle + ' degrees', $
-           xtitle='Radius [Rsun]', $
-           ytitle='Calibrated Polarization Brightness Intensity B/Bsun', $
-           yrange=[1.0e-09, 1.0e-05], ystyle=2, ylog=1
+    if (yminset or ymaxset) then	begin
+      plot, scandx, scan * 1.0e-06, $
+            charsize=1.5, thick=2, charthick=2, xthick=2, ythick=2, $
+            title=fits_file + ' Radial Scan @' + sangle + ' degrees', $
+            xtitle='Radius [Rsun]', $
+            ytitle='Calibrated Polarization Brightness Intensity B/Bsun', $
+            yrange=[1.0e-09, 1.0e-05], ystyle=2, ylog=1
+    endif else begin
+      plot, scandx, scan * 1.0e-06, $
+            charsize=1.5, thick=2, charthick=2, xthick=2, ythick=2, $
+            title=fits_file + ' Radial Scan @' + sangle + ' degrees', $
+            xtitle='Radius [Rsun]', $
+            ytitle='Calibrated Polarization Brightness Intensity B/Bsun', $
+            yrange=[1.0e-09, 1.0e-05], ystyle=2, ylog=1
+    endelse
 
-   endif else begin
-     plot, scandx, scan * 1.0e-06, $
-           charsize=1.5, thick=2, charthick=2, xthick=2, ythick=2, $
-           title=fits_file + ' Radial Scan @' + sangle + ' degrees', $
-           xtitle='Radius [Rsun]', $
-           ytitle='Calibrated Polarization Brightness Intensity B/Bsun', $
-           yrange=[1.0e-09, 1.0e-05], ystyle=2, ylog=1
-   endelse
-
-   device, /close
- endif
+    device, /close
+  endif
 
   set_plot, 'X'
 end
