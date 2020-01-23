@@ -168,10 +168,6 @@ pro kcor_ftscan, fits_file, radius, thmin, thmax, thinc, $
   ;lct, filepath('dif.lut', subdir=['..', 'resources'], root=mg_src_root())
   lct, filepath('quallab.lut', subdir=['..', 'resources'], root=mg_src_root())
 
-  redlut   = bytarr(256)
-  greenlut = bytarr(256)
-  bluelut  = bytarr(256)
-
   ; color LUT designations for annotation
   red    = 254
   green  = 253
@@ -184,9 +180,9 @@ pro kcor_ftscan, fits_file, radius, thmin, thmax, thinc, $
 
   ; display image
   imin = min(img, max=imax)
-  dmin = 0.0
-  dmax = 1.2
-  dexp = 0.7
+  ;dmin = 0.0
+  ;dmax = 1.2e-6
+  ;dexp = 0.7
 
   ;imgb = bytscl(img, min=imin, max=imax, top=249)
   ;imgb = bytscl(img, min=dispmin, max=dispmax, top=249)
@@ -266,32 +262,23 @@ pro kcor_ftscan, fits_file, radius, thmin, thmax, thinc, $
   write_gif, gif_file, img_plot, redlut, greenlut, bluelut
 
   ; Y-axis plot range
-  yminset = 0
-  ymaxset = 0
+  _ymin = n_elements(ymin) eq 0L ? dmin : ymin
+  _ymax = n_elements(ymax) eq 0L ? dmax : ymax
 
-  if (n_elements(ymin) eq 0L) then begin
-    ymin = 0.0
-  endif
-
-  if (n_elements(ymax) eq 0L) then begin
-    ymax = 60000.0
-  endif
-
-  print, 'ymin/ymax: ', ymin, ymax
-  print, 'yrange: ', ymin, ymax
+  print, _ymin, _ymax, format='(%"yrange: [%0.3g, %0.3g]")'
 
   ; plot theta scan to a GIF file
   gif_file  = basename + '_r' + srad + '_plot.gif'
   print, 'plot name: ', gif_file
   set_plot, 'Z'
   device, set_resolution=[1440, 768], decomposed=0, set_colors=256, $
-        z_buffering=0
+          z_buffering=0
 
   plot, scandx, scan, $
         background=255, color=0, charsize=1.0,	$
         title='Theta Scan ' + fits_file + ' ' + srad + ' Rsun', $
-        xtitle='Position Angle', $
-        ytitle=ylab, yrange=[ymin, ymax]
+        xtitle='Position Angle', xstyle=1, $
+        ytitle=ylab, yrange=[_ymin, _ymax]
 
   img_disp = tvrd()
   write_gif, gif_file, img_disp
@@ -305,9 +292,9 @@ pro kcor_ftscan, fits_file, radius, thmin, thmax, thinc, $
 
   plot, scandx, scan, $
         title='Theta Scan ' + fits_file + ' ' + srad + ' Rsun',	$
-        xtitle='Position Angle', $
+        xtitle='Position Angle', xstyle=1, $
         ytitle=ylab, $
-        yrange=[ymin, ymax]
+        yrange=[_ymin, _ymax]
 
   device, /close
 

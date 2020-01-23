@@ -6,30 +6,28 @@
 ; :Examples:
 ;   Try::
 ;
-;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb
-;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb
-;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, wmin=1.0
-;     kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, wmax=250.0
+;     kcor_fitsdisp, fits_name
+;     kcor_fitsdisp, fits_name, wmin=1.0e-6
+;     kcor_fitsdisp, fits_name, wmax=2.0e-6
 ;
 ; :Params:
 ;   fits_name : in, required, type=string
 ;     FITS filename
-;   xdim_prev : out, required, type=numeric
-;     `xdim` for image
-;   ydim_prev : out, required, type=numeric
-;     `ydim` for image
-;   xb : in, required, type=numeric
-;     x-axis border for annotation
-;   yb : in, required, type=numeric
-;     y-axis border for annotation
 ;
 ; :Keywords:
-;   wmin : in, optional, type=numeric, default=0.0
-;     minimum used for display scaling
-;   wmax : in, optional, type=numeric, default=1.2
-;     maximum used for display scaling
+;   left_margin : in, optional, type=numeric, default=160
+;     x-axis border for annotation
+;   bottom_margin : in, optional, type=numeric, default=80
+;     y-axis border for annotation
+;;   wmin : in, optional, type=numeric, default=0.0
+;     minimum used for display scaling, uses DISPMIN FITS keyword for default,
+;     if not present then 0.0
+;   wmax : in, optional, type=numeric, default=1.2e-7
+;     maximum used for display scaling, uses DISPMAX FITS keyword for default,
+;     if not present then 1.2e-7
 ;   wexp : in, optional, type=numeric, default=0.7
-;     exponent used for display scaling
+;     exponent used for display scaling, uses DISPEXP FITS keyword for default,
+;     if not present then 0.7
 ;
 ; :Uses:
 ;   fxpar, readfits, kcor_fits_annotate
@@ -39,41 +37,41 @@
 ;   26 Sep 2001 [ALS] wide format (no colorbar BELOW image).
 ;   17 Nov 2015 [ALS] adapt for KCor
 ;-
-pro kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
+pro kcor_fitsdisp, fits_name, $
+                   left_margin=xb, bottom_margin=yb, $
                    wmin=wmin, wmax=wmax, wexp=wexp
   compile_opt strictarr
 
-  print, '>>> kcor_fitsdisp'
-  ;xb = 160   ; X-axis border for annotation
-  ;yb =   0   ; Y-axis border for annotation
+  ;print, '>>> kcor_fitsdisp'
+
+  _xb = n_elements(xb) eq 0L ? 160 : xb
+  _yb = n_elements(yb) eq 0L ? 80 : yb
 
   ftspos   = strpos(fits_name, '.fts')
   basename = strmid(fits_name, 0, ftspos)
 
-  img = readfits(fits_name, hdu, /noscale)
+  img = readfits(fits_name, hdu, /noscale, /silent)
 
   ; extract information from header
   xdim     = fxpar(hdu, 'NAXIS1')
   ydim     = fxpar(hdu, 'NAXIS2')
 
   ; "Erase" annotation area
-  print, '### kcor_fitsdisp: erasing annotation area.'
-  leftborder   = bytarr(xb,        yb + ydim)
-  bottomborder = bytarr(xb + xdim, yb       )
-  leftborder   [*, *] = 255
-  bottomborder [*, *] = 255
+  ;print, '### kcor_fitsdisp: erasing annotation area.'
+  leftborder   = bytarr(_xb,        _yb + ydim) + 255B
+  bottomborder = bytarr(_xb + xdim, _yb       ) + 255B
   tv, leftborder
   tv, bottomborder
 
   ; resize window if it has changed
   ;if (xdim ne xdim_prev or ydim ne ydim_prev) then $
-  ;  window, xsize=xdim+xb, ys=ydim+yb
+  ;  window, xsize=xdim+_xb, ys=ydim+_yb
 
   xdim_prev = xdim
   ydim_prev = ydim
 
   ; annotate image
-  ;kcor_fits_annotate, hdu, xdim, ydim, xb, yb, wmin=wmin, wmax=wmax, wexp=wexp
+  ;kcor_fits_annotate, hdu, xdim, ydim, _xb, _yb, wmin=wmin, wmax=wmax, wexp=wexp
 
   ; get information from FITS header
 
@@ -86,7 +84,7 @@ pro kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
   date_obs = fxpar(hdu, 'DATE-OBS', count=qdate_obs)
   time_obs = fxpar(hdu, 'TIME-OBS', count=qtime_obs)
   rsun     = fxpar(hdu, 'RSUN_OBS', count=qrsun)
-  if (qrsun eq 0L) then rsun = fxpar (hdu, 'RSUN', count=qrsun)
+  if (qrsun eq 0L) then rsun = fxpar(hdu, 'RSUN', count=qrsun)
   bunit    = fxpar(hdu, 'BUNIT',    count=qbunit)
   bzero    = fxpar(hdu, 'BZERO',    count=qbzero)
   bscale   = fxpar(hdu, 'BSCALE',   count=qbscale)
@@ -104,7 +102,7 @@ pro kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
 
   ; default display parameters
   dmin = 0.0
-  dmax = 1.2
+  dmax = 1.2e-6
   dexp = 0.7
 
   ; display image
@@ -116,8 +114,8 @@ pro kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
   if (n_elements(wmax) gt 0L) then dmax = wmax   ; display max from keyword
   if (n_elements(wexp) gt 0L) then dexp = wexp   ; display exponent from keyword
 
-  tv, bytscl(img^dexp, min=dmin, max=dmax, top=249), xb, yb
+  tv, bytscl(img^dexp, min=dmin, max=dmax, top=249), _xb, _yb
 
   ; annotate image
-  kcor_fits_annotate, hdu, xdim, ydim, xb, yb, wmin=wmin, wmax=wmax, wexp=wexp
+  kcor_fits_annotate, hdu, xdim, ydim, _xb, _yb, wmin=wmin, wmax=wmax, wexp=wexp
 end

@@ -647,5 +647,5 @@ pro kcor_fits_annotate, hdu, xdim, ydim, xb, yb, $
           /device, charsize=cs4, color=red
           ;/device, font=bfont, charsize=cs4, color=red
 
-  print, '<<<<<<< Leaving fits_annotate_kcor'
+  print, '<<<<<<< Leaving kcor_fits_annotate'
 end

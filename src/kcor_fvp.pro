@@ -142,8 +142,9 @@ pro kcor_fvp, fits_name, $
   ;kcor_fits_annotate, hdu, xdim, ydim, xb, yb
 
   ; display image
-  kcor_fitsdisp, fits_name, xdim_prev, ydim_prev, xb, yb, $
-                 gif=gif, wmin=wmin, wmax=wmax, wexp=wexp
+  kcor_fitsdisp, fits_name, $
+                 left_margin=xb, bottom_margin=yb, $
+                 wmin=wmin, wmax=wmax, wexp=wexp
 
   ; use mouse to extract radius & position angle for cursor position
   mouse_pos_lab, xdim, ydim, xcen, ycen, pixrs, roll, $
