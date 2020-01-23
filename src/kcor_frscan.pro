@@ -5,6 +5,18 @@
 ;
 ; Note: this procedure works best in private colormap mode (256 levels).
 ;
+; :Examples:
+;
+;   Try::
+;
+;     IDL> kcor_frscan, f, 75.0, 1.11, 2.6, 0.01
+;
+;   This should produce the following two plots:
+;
+;     .. image:: 20200120_214522_kcor_l2_pa75.00_img.gif
+;
+;     .. image:: 20200120_214522_kcor_l2_pa75.00_plot.gif
+;
 ; :Params:
 ;   fits_file : in, required, type=string
 ;     FITS filename
