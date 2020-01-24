@@ -10,7 +10,11 @@
 ;
 ;   Or to manually control the display scaling, try::
 ;
-;     IDL> kcor_fitsdisp, fits_name, wmin=1.0e-6, wmax=2.0e-6
+;     IDL> kcor_fitsdisp, f, wmin=-0.02e-6, wmax=0.7e-6, wexp=1.0
+;
+;   This should produce an image like the following::
+;
+;   .. image:: kcor_fitsdisp-screenshot.png
 ;
 ; :Params:
 ;   fits_name : in, required, type=string
