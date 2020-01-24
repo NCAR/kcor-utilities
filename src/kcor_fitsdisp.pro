@@ -4,11 +4,13 @@
 ; Display a FITS image.
 ;
 ; :Examples:
-;   Try::
+;   To display a KCor L2 FITS file, do::
 ;
-;     kcor_fitsdisp, fits_name
-;     kcor_fitsdisp, fits_name, wmin=1.0e-6
-;     kcor_fitsdisp, fits_name, wmax=2.0e-6
+;     IDL> kcor_fitsdisp, fits_name
+;
+;   Or to manually control the display scaling, try::
+;
+;     IDL> kcor_fitsdisp, fits_name, wmin=1.0e-6, wmax=2.0e-6
 ;
 ; :Params:
 ;   fits_name : in, required, type=string
@@ -19,7 +21,7 @@
 ;     x-axis border for annotation
 ;   bottom_margin : in, optional, type=numeric, default=80
 ;     y-axis border for annotation
-;;   wmin : in, optional, type=numeric, default=0.0
+;   wmin : in, optional, type=numeric, default=0.0
 ;     minimum used for display scaling, uses DISPMIN FITS keyword for default,
 ;     if not present then 0.0
 ;   wmax : in, optional, type=numeric, default=1.2e-7

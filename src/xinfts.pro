@@ -4,16 +4,29 @@
 ; Animate a sequence of FITS images.
 ;
 ; :Examples:
-;   For example::
+;   For example, to animate the FITS files in a test file `fits.ls`::
 ;
-;     xinfts, 'fits.ls'
-;     xinfts, 'fits.ls', rate=25
-;     xinfts, 'fits.ls', rate=8, /label
-;     xinfts, 'fits.ls', rate=2, /label, cm='~/color/sunset.lut'
-;     xinfts, 'fits.ls', wmin=-1200, wmax=600
-;     xinfts, 'fits.ls', cm='dif'
-;     xinfts, 'fits.ls', cm='chip1'
-;     xinfts, 'fits.ls', cm='bwy'
+;     IDL> xinfts, 'fits.ls'
+;
+;   To control the rate of animation::
+;
+;     IDL> xinfts, 'fits.ls', rate=25
+;     IDL> xinfts, 'fits.ls', rate=8, /label
+;     IDL> xinfts, 'fits.ls', rate=2, /label, cm='~/color/sunset.lut'
+;
+;   To control the scaling of the image intensities::
+;
+;     IDL> xinfts, 'fits.ls', wmin=-1200, wmax=600
+;
+;   To use different colormaps::
+;
+;     IDL> xinfts, 'fits.ls', cm='dif'
+;     IDL> xinfts, 'fits.ls', cm='chip1'
+;     IDL> xinfts, 'fits.ls', cm='bwy'
+;
+;   `XINFTS` brings up a GUI to control the playback of the animation::
+;
+;   .. image:: xinfts-screenshot.png
 ;
 ; :Params:
 ;   listfile : in, required, type=string

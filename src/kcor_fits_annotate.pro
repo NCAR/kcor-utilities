@@ -16,11 +16,11 @@
 ;     y-axis border for annotation
 ;
 ; :Keywords:
-;   wmin : in, optional, type=numeric, default=0.0
+;   wmin : in, optional, type=numeric
 ;     minimum used for display scaling
-;   wmax : in, optional, type=numeric, default=1.2
+;   wmax : in, optional, type=numeric
 ;     maximum used for display scaling
-;   wexp : in, optional, type=numeric, default=0.7
+;   wexp : in, optional, type=numeric
 ;     exponent used for display scaling
 ;
 ; :History:
