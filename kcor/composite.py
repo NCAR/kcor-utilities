@@ -19,7 +19,34 @@ from sunpy.map.maputils import all_coordinates_from_map
 # masking out solar disk
 # https://docs.sunpy.org/en/stable/generated/gallery/computer_vision_techniques/mask_disk.html
 
-def get_aia(time, wavelength=171 * u.angstrom, rsun=1.2, threshold=35):
+
+def process_lasco_map(lasco_filename):
+    # TODO: overoccult
+    return Map(lasco_filename)
+
+def process_kcor_map(kcor_filename):
+    # TODO: mask outside KCor FOV
+    # TODO: change colormap
+    return Map(kcor_filename)
+
+
+def process_aia_map(m, rsun=1.2, threshold=35):
+    hpc_coords = all_coordinates_from_map(m)
+    r = np.sqrt(hpc_coords.Tx ** 2 + hpc_coords.Ty ** 2) / m.rsun_obs
+
+    # radii_mask = ma.masked_greater_equal(r, 1)
+    # intensity_mask = ma.masked_less_equal(m.data, 50)
+    # mask = ma.logical_and(radii_mask.mask, intensity_mask.mask)
+    mask = ma.logical_and(r > rsun, m.data < threshold)
+
+    #palette = m.cmap
+    #palette.set_bad("black", alpha=0.0)
+
+    scaled_map = sunpy.map.Map(m.data, m.meta, mask=mask)
+    return(scaled_map)
+
+
+def get_aia_map(time, wavelength=171 * u.angstrom):
     aia_results = Fido.search(a.Time(time - 30 * u.minute, time + 30 * u.minute,
                                      near=time),
                               a.Instrument("AIA"),
@@ -31,21 +58,7 @@ def get_aia(time, wavelength=171 * u.angstrom, rsun=1.2, threshold=35):
     maps = [Map(f) for f in aia_files]
     time_diffs = np.array([abs(m.date - time) for m in maps])
     min_index = np.argmin(time_diffs)
-    m = maps[min_index]
-
-    hpc_coords = all_coordinates_from_map(m)
-    r = np.sqrt(hpc_coords.Tx ** 2 + hpc_coords.Ty ** 2) / m.rsun_obs
-
-    # radii_mask = ma.masked_greater_equal(r, 1)
-    # intensity_mask = ma.masked_less_equal(m.data, 50)
-    # mask = ma.logical_and(radii_mask.mask, intensity_mask.mask)
-    mask = ma.logical_and(r > rsun, m.data < threshold)
-
-    palette = m.cmap
-    palette.set_bad("black", alpha=0.0)
-
-    scaled_map = sunpy.map.Map(m.data, m.meta, mask=mask)
-    return(scaled_map)
+    return maps[min_index]
 
 
 def get_lasco(time):
@@ -79,14 +92,18 @@ def main():
     parser.add_argument("time", type=str,
                         help="date/time to create composite")
     parser.add_argument("--kcor-filename", type=str, help="KCor L2 filename")
+    parser.add_argument("--lasco-filename", type=str, help="LASCO C2 filename")
     args = parser.parse_args()
     time = sunpy.time.parse_time(args.time)
 
-    aia_map = get_aia(time, rsun=1.11, threshold=35)
-    lasco_file = "~/Desktop/22722720.fts"
-    #kcor_file = "~/Desktop/20190503_214445_kcor_l2.fts.gz"
-    #kcor_map = Map(args.kcor_filename)
-    composite = Map(aia_map, args.kcor_filename, lasco_file, composite=True)
+    aia_map = get_aia_map(time)
+    processed_aia_map = process_aia_map(aia_map, rsun=1.11, threshold=35)
+
+    processed_kcor_map = process_kcor_map(args.kcor_filename)
+    processed_lasco_map = process_lasco_map(args.lasco_filename)
+    # TODO: form a tuple of the defined filenames
+    maps = (processed_lasco_map, processed_kcor_map, processed_aia_map)
+    composite = Map(*maps, composite=True)
     display_map(composite, time)
 
 
