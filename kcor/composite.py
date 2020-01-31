@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 import numpy.ma as ma
+import skimage.exposure
 
 from sunpy import log
 import sunpy.time
@@ -16,18 +17,24 @@ from sunpy.net import Fido, attrs as a
 from sunpy.map import Map
 from sunpy.map.maputils import all_coordinates_from_map
 
-# masking out solar disk
-# https://docs.sunpy.org/en/stable/generated/gallery/computer_vision_techniques/mask_disk.html
 
-
-def process_lasco_map(lasco_filename):
+def process_lasco_map(m):
     # TODO: overoccult
-    return Map(lasco_filename)
+    return(m)
 
-def process_kcor_map(kcor_filename):
-    # TODO: mask outside KCor FOV
-    # TODO: change colormap
-    return Map(kcor_filename)
+
+def process_kcor_map(m, rsun=2.7, gamma=0.7):
+    hpc_coords = all_coordinates_from_map(m)
+    r = np.sqrt(hpc_coords.Tx ** 2 + hpc_coords.Ty ** 2) / m.rsun_obs
+    mask = r > rsun
+
+    rescaled_data = m.data
+    rescaled_data[rescaled_data < 0.0] = 0.0
+    adjusted_data = skimage.exposure.adjust_gamma(rescaled_data, gamma=gamma)
+
+    processed_map = sunpy.map.Map(adjusted_data, m.meta, mask=mask)
+
+    return(processed_map)
 
 
 def process_aia_map(m, rsun=1.2, threshold=35):
@@ -42,8 +49,8 @@ def process_aia_map(m, rsun=1.2, threshold=35):
     #palette = m.cmap
     #palette.set_bad("black", alpha=0.0)
 
-    scaled_map = sunpy.map.Map(m.data, m.meta, mask=mask)
-    return(scaled_map)
+    processed_map = sunpy.map.Map(m.data, m.meta, mask=mask)
+    return(processed_map)
 
 
 def get_aia_map(time, wavelength=171 * u.angstrom):
@@ -74,37 +81,54 @@ def get_lasco(time):
     return(lasco_files[min_index])
 
 
-def display_map(map, date):
+def display_map(m, date, output_filename):
     fig = plt.figure(figsize=(8, 8))
     ax = plt.subplot()
-    #map.set_gamma(0.7)
-    #map.plot(gamma=0.7)
-    map.plot()
-    ax.set_title(f"AIA-KCor-LASCO composite {date}")
-    plt.show()
-    #map.peek()
+    m.plot()
+    ax.set_title(f"AIA-KCor-LASCO composite for {date}")
+    plt.savefig(output_filename, bbox_inches="tight")
+    #plt.show()
 
 
 def main():
-    version = "0.0.1"
+    version = "0.2.0"
     name = f"KCor composite image {version}"
     parser = argparse.ArgumentParser(description=name)
     parser.add_argument("time", type=str,
-                        help="date/time to create composite")
+                        help="date/time to create composite, i.e., 2019-05-03T21:21:14")
+    parser.add_argument("--aia-radius", type=float, default=1.11,
+                        help="[Rsun] AIA outer radius")
+    parser.add_argument("--aia-intensity-threshold", type=float, default=35,
+                        help="[Rsun] AIA min intentisyt threshold")
     parser.add_argument("--kcor-filename", type=str, help="KCor L2 filename")
+    parser.add_argument("--kcor-radius", type=float, default=2.7,
+                        help="[Rsun] KCor outer radius")
     parser.add_argument("--lasco-filename", type=str, help="LASCO C2 filename")
+    parser.add_argument("-o", "--output", type=str, help="output filename")
     args = parser.parse_args()
+
     time = sunpy.time.parse_time(args.time)
 
     aia_map = get_aia_map(time)
-    processed_aia_map = process_aia_map(aia_map, rsun=1.11, threshold=35)
+    processed_aia_map = process_aia_map(aia_map,
+                                        rsun=args.aia_radius,
+                                        threshold=args.aia_intensity_threshold)
 
-    processed_kcor_map = process_kcor_map(args.kcor_filename)
-    processed_lasco_map = process_lasco_map(args.lasco_filename)
+    processed_kcor_map = process_kcor_map(Map(args.kcor_filename),
+                                          rsun=args.kcor_radius)
+
+    processed_lasco_map = process_lasco_map(Map(args.lasco_filename))
+
     # TODO: form a tuple of the defined filenames
     maps = (processed_lasco_map, processed_kcor_map, processed_aia_map)
+
+    output_filename = args.output
+    if output_filename is None:
+        dt = time.datetime.strftime("%Y%m%d.%H%M%S")
+        output_filename = f"{dt}.composite.png"
+
     composite = Map(*maps, composite=True)
-    display_map(composite, time)
+    display_map(composite, time, output_filename)
 
 
 if __name__ == "__main__":
