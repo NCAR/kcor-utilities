@@ -109,25 +109,33 @@ def main():
 
     time = sunpy.time.parse_time(args.time)
 
+    maps = []
+    names = []
+
+    if args.lasco_filename is not None:
+        processed_lasco_map = process_lasco_map(Map(args.lasco_filename))
+        maps.append(processed_lasco_map)
+        names.append("lasco")
+
+    if args.kcor_filename is not None:
+        processed_kcor_map = process_kcor_map(Map(args.kcor_filename),
+                                              rsun=args.kcor_radius)
+        maps.append(processed_kcor_map)
+        names.append("kcor")
+
     aia_map = get_aia_map(time)
     processed_aia_map = process_aia_map(aia_map,
                                         rsun=args.aia_radius,
                                         threshold=args.aia_intensity_threshold)
-
-    processed_kcor_map = process_kcor_map(Map(args.kcor_filename),
-                                          rsun=args.kcor_radius)
-
-    processed_lasco_map = process_lasco_map(Map(args.lasco_filename))
-
-    # TODO: form a tuple of the defined filenames
-    maps = (processed_lasco_map, processed_kcor_map, processed_aia_map)
+    maps.append(processed_aia_map)
+    names.append("aia")
 
     output_filename = args.output
     if output_filename is None:
         dt = time.datetime.strftime("%Y%m%d.%H%M%S")
-        output_filename = f"{dt}.composite.png"
+        output_filename = f"{dt}.{'-'.join(names)}.png"
 
-    composite = Map(*maps, composite=True)
+    composite = Map(*tuple(maps), composite=True)
     display_map(composite, time, output_filename)
 
 
