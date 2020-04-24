@@ -76,7 +76,7 @@ pro xinfts, listfile, $
             label=label, $
             cm=cm, $
             order=order, $
-	    wmin=wmin, $
+            wmin=wmin, $
             wmax=wmax
   compile_opt strictarr
 
