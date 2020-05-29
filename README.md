@@ -31,3 +31,9 @@ Animate a sequence of KCor L2 FITS files.
 Basic display of a KCor L2 FITS file.
 
 
+#### KCOR_FVP
+
+Display a KCor FITS image and report cursor position.
+
+
+

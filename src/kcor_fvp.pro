@@ -1,7 +1,7 @@
 ; docformat = 'rst'
 
 ;+
-; Display a kcor FITS image & report cursor position.
+; Display a KCor FITS image and report cursor position.
 ;
 ; :Examples:
 ;   Try::
